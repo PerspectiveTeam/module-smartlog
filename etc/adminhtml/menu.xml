@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Perspective_SmartLog::main"
+             title="SmartLog"
+             module="Perspective_SmartLog"
+             sortOrder="300"
+             parent="Perspective::top_level"
+             resource="Perspective_SmartLog::main"/>
+        <add id="Perspective_SmartLog::search"
+             title="Log Search"
+             module="Perspective_SmartLog"
+             sortOrder="10"
+             parent="Perspective_SmartLog::main"
+             resource="Perspective_SmartLog::search"
+             action="smartlog/log/index"/>
+    </menu>
+</config>

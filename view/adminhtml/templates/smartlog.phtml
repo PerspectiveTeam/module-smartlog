@@ -1,0 +1,269 @@
+<?php
+/**
+ * SmartLog admin search page template.
+ *
+ * @var \Perspective\SmartLog\Block\Adminhtml\SmartLog $block
+ */
+
+$searchUrl  = $block->escapeUrl($block->getSearchUrl());
+$reindexUrl = $block->escapeUrl($block->getReindexUrl());
+$configUrl  = $block->escapeUrl($block->getConfigUrl());
+$isEnabled  = $block->isEnabled();
+$provider   = $block->escapeHtml($block->getProvider());
+$model      = $block->escapeHtml($block->getModel());
+?>
+
+<div class="smartlog-container">
+    <?php if (!$isEnabled): ?>
+        <div class="message message-warning">
+            <span>
+                <?= $block->escapeHtml(__('SmartLog is disabled.')) ?>
+                <a href="<?= $configUrl ?>"><?= $block->escapeHtml(__('Go to Configuration')) ?></a>
+            </span>
+        </div>
+    <?php else: ?>
+        <div class="smartlog-info">
+            <span class="smartlog-provider-badge"><?= $provider ?></span>
+            <span class="smartlog-model-badge"><?= $model ?></span>
+            <a href="<?= $configUrl ?>" class="smartlog-config-link">
+                <?= $block->escapeHtml(__('Configuration')) ?>
+            </a>
+        </div>
+
+        <div class="smartlog-search-form">
+            <div class="smartlog-form-row">
+                <div class="smartlog-field smartlog-field-query">
+                    <label class="label" for="smartlog-query">
+                        <span><?= $block->escapeHtml(__('Search Query')) ?></span>
+                    </label>
+                    <div class="control">
+                        <textarea id="smartlog-query"
+                                  name="query"
+                                  rows="3"
+                                  class="input-text"
+                                  placeholder="<?= $block->escapeHtmlAttr(__('Describe the log entry you are looking for, e.g. "payment gateway timeout errors" or "catalog reindex failure"...')) ?>"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="smartlog-form-row smartlog-form-row-filters">
+                <div class="smartlog-field smartlog-field-date">
+                    <label class="label" for="smartlog-date-from">
+                        <span><?= $block->escapeHtml(__('Date From')) ?></span>
+                    </label>
+                    <div class="control">
+                        <input type="text"
+                               id="smartlog-date-from"
+                               name="date_from"
+                               class="input-text _has-datepicker"
+                               placeholder="YYYY-MM-DD" />
+                    </div>
+                </div>
+
+                <div class="smartlog-field smartlog-field-date">
+                    <label class="label" for="smartlog-date-to">
+                        <span><?= $block->escapeHtml(__('Date To')) ?></span>
+                    </label>
+                    <div class="control">
+                        <input type="text"
+                               id="smartlog-date-to"
+                               name="date_to"
+                               class="input-text _has-datepicker"
+                               placeholder="YYYY-MM-DD" />
+                    </div>
+                </div>
+
+                <div class="smartlog-field smartlog-field-limit">
+                    <label class="label" for="smartlog-limit">
+                        <span><?= $block->escapeHtml(__('Results')) ?></span>
+                    </label>
+                    <div class="control">
+                        <select id="smartlog-limit" name="limit" class="select">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="smartlog-actions">
+                <button id="smartlog-search-btn"
+                        class="action-default scalable action-primary"
+                        type="button"
+                        title="<?= $block->escapeHtmlAttr(__('Search Logs')) ?>">
+                    <span><?= $block->escapeHtml(__('Search Logs')) ?></span>
+                </button>
+                <button id="smartlog-reindex-btn"
+                        class="action-default scalable action-secondary"
+                        type="button"
+                        title="<?= $block->escapeHtmlAttr(__('Reindex Logs')) ?>">
+                    <span><?= $block->escapeHtml(__('Reindex All Logs')) ?></span>
+                </button>
+            </div>
+        </div>
+
+        <div id="smartlog-status" class="message" style="display:none;"></div>
+
+        <div id="smartlog-results" class="smartlog-results" style="display:none;">
+            <h3>
+                <?= $block->escapeHtml(__('Search Results')) ?>
+                (<span id="smartlog-results-count">0</span>)
+            </h3>
+            <div id="smartlog-results-list"></div>
+        </div>
+
+        <script>
+        require(['jquery', 'mage/calendar'], function ($) {
+            'use strict';
+
+            // Initialize date pickers
+            $('#smartlog-date-from').calendar({
+                dateFormat: 'yy-mm-dd',
+                showsTime: false,
+                changeMonth: true,
+                changeYear: true
+            });
+            $('#smartlog-date-to').calendar({
+                dateFormat: 'yy-mm-dd',
+                showsTime: false,
+                changeMonth: true,
+                changeYear: true
+            });
+
+            var formKey = window.FORM_KEY;
+
+            // --- Search ---
+            $('#smartlog-search-btn').on('click', function () {
+                var query = $.trim($('#smartlog-query').val());
+                if (!query) {
+                    showStatus('<?= $block->escapeJs(__('Please enter a search query.')) ?>', 'warning');
+                    return;
+                }
+
+                var $btn = $(this);
+                $btn.prop('disabled', true).addClass('disabled');
+                showStatus('<?= $block->escapeJs(__('Searching...')) ?>', 'info');
+                $('#smartlog-results').hide();
+
+                $.ajax({
+                    url: '<?= $searchUrl ?>',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        form_key: formKey,
+                        query: query,
+                        limit: $('#smartlog-limit').val(),
+                        date_from: $('#smartlog-date-from').val(),
+                        date_to: $('#smartlog-date-to').val()
+                    },
+                    success: function (response) {
+                        $btn.prop('disabled', false).removeClass('disabled');
+                        if (response.success) {
+                            displayResults(response.results);
+                            hideStatus();
+                        } else {
+                            showStatus(response.message, 'error');
+                        }
+                    },
+                    error: function () {
+                        $btn.prop('disabled', false).removeClass('disabled');
+                        showStatus('<?= $block->escapeJs(__('Request failed. Please check the configuration and try again.')) ?>', 'error');
+                    }
+                });
+            });
+
+            // Allow Enter in textarea to submit (Shift+Enter for newline)
+            $('#smartlog-query').on('keydown', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    $('#smartlog-search-btn').trigger('click');
+                }
+            });
+
+            // --- Reindex ---
+            $('#smartlog-reindex-btn').on('click', function () {
+                if (!confirm('<?= $block->escapeJs(__('This will re-read and re-index all log files. It may take several minutes depending on the log volume. Continue?')) ?>')) {
+                    return;
+                }
+
+                var $btn = $(this);
+                $btn.prop('disabled', true).addClass('disabled');
+                showStatus('<?= $block->escapeJs(__('Indexing logs... This may take a few minutes. Please wait.')) ?>', 'info');
+
+                $.ajax({
+                    url: '<?= $reindexUrl ?>',
+                    type: 'POST',
+                    dataType: 'json',
+                    timeout: 600000, // 10 min
+                    data: { form_key: formKey },
+                    success: function (response) {
+                        $btn.prop('disabled', false).removeClass('disabled');
+                        showStatus(response.message, response.success ? 'success' : 'error');
+                    },
+                    error: function () {
+                        $btn.prop('disabled', false).removeClass('disabled');
+                        showStatus('<?= $block->escapeJs(__('Reindex request failed. For large log volumes, use CLI: bin/magento smartlog:index')) ?>', 'error');
+                    }
+                });
+            });
+
+            // --- Helpers ---
+            function showStatus(msg, type) {
+                var $el = $('#smartlog-status');
+                $el.removeClass('message-success message-error message-info message-warning');
+                var cssClass = 'message-' + (type === 'success' ? 'success' : type === 'warning' ? 'warning' : type === 'info' ? 'info' : 'error');
+                $el.addClass(cssClass).text(msg).show();
+            }
+
+            function hideStatus() {
+                $('#smartlog-status').hide();
+            }
+
+            function displayResults(results) {
+                var $container = $('#smartlog-results');
+                var $list = $('#smartlog-results-list');
+                var $count = $('#smartlog-results-count');
+
+                $list.empty();
+                $count.text(results.length);
+
+                if (results.length === 0) {
+                    $list.html('<div class="smartlog-no-results"><?= $block->escapeJs(__('No matching log entries found. Try a different query or reindex logs.')) ?></div>');
+                } else {
+                    $.each(results, function (index, item) {
+                        var $item = $('<div class="smartlog-result-item"></div>');
+
+                        // Header
+                        var $header = $('<div class="smartlog-result-header"></div>');
+                        $header.append($('<span class="smartlog-result-num"></span>').text('#' + (index + 1)));
+                        $header.append($('<span class="smartlog-result-file"></span>').text(item.file || ''));
+
+                        if (item.lines) {
+                            $header.append($('<span class="smartlog-result-lines"></span>').text('Lines: ' + item.lines));
+                        }
+                        if (item.date_from) {
+                            var dateText = item.date_from;
+                            if (item.date_to && item.date_to !== item.date_from) {
+                                dateText += ' — ' + item.date_to;
+                            }
+                            $header.append($('<span class="smartlog-result-date"></span>').text(dateText));
+                        }
+
+                        $item.append($header);
+
+                        // Content
+                        var $content = $('<pre class="smartlog-result-content"></pre>').text(item.content || '');
+                        $item.append($content);
+
+                        $list.append($item);
+                    });
+                }
+
+                $container.show();
+            }
+        });
+        </script>
+    <?php endif; ?>
+</div>

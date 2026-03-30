@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="perspective" translate="label" sortOrder="200">
+            <label>Perspective</label>
+        </tab>
+        <section id="smartlog" translate="label" sortOrder="350"
+                 showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>SmartLog</label>
+            <tab>perspective</tab>
+            <resource>Perspective_SmartLog::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable SmartLog</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable AI-powered log analysis with semantic search</comment>
+                </field>
+            </group>
+            <group id="embedding" translate="label" type="text" sortOrder="20"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Embedding Provider</label>
+                <field id="provider" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Provider</label>
+                    <source_model>Perspective\SmartLog\Model\Config\Source\Provider</source_model>
+                    <comment>Select the AI provider for generating embeddings</comment>
+                </field>
+                <field id="api_key" translate="label comment" type="obscure" sortOrder="20"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>API Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <comment>API key for the selected provider (OpenAI / Google AI / Voyage AI)</comment>
+                </field>
+                <field id="model_openai" translate="label" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>OpenAI Embedding Model</label>
+                    <source_model>Perspective\SmartLog\Model\Config\Source\OpenAiModel</source_model>
+                    <depends>
+                        <field id="provider">openai</field>
+                    </depends>
+                </field>
+                <field id="model_gemini" translate="label" type="select" sortOrder="31"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Gemini Embedding Model</label>
+                    <source_model>Perspective\SmartLog\Model\Config\Source\GeminiModel</source_model>
+                    <depends>
+                        <field id="provider">gemini</field>
+                    </depends>
+                </field>
+                <field id="model_anthropic" translate="label comment" type="select" sortOrder="32"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Voyage AI Embedding Model</label>
+                    <source_model>Perspective\SmartLog\Model\Config\Source\VoyageModel</source_model>
+                    <comment>Anthropic recommends Voyage AI for embeddings</comment>
+                    <depends>
+                        <field id="provider">anthropic</field>
+                    </depends>
+                </field>
+                <field id="chunk_size" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Chunk Size (log entries)</label>
+                    <comment>Number of log entries per chunk for embedding generation</comment>
+                    <validate>validate-digits</validate>
+                </field>
+                <field id="batch_size" translate="label comment" type="text" sortOrder="50"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Batch Size</label>
+                    <comment>Number of chunks to process per embedding API call</comment>
+                    <validate>validate-digits</validate>
+                </field>
+            </group>
+            <group id="opensearch" translate="label comment" type="text" sortOrder="30"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>OpenSearch Vector Store</label>
+                <comment><![CDATA[Connection credentials (host, port, auth) are taken from <strong>Stores → Configuration → Catalog → Catalog Search</strong> (OpenSearch settings).]]></comment>
+                <field id="index_name" translate="label comment" type="text" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Vector Index Name</label>
+                    <comment>OpenSearch index name for storing log embeddings (separate from catalog search index)</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

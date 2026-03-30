@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Perspective_TimeSlots::top_level">
+                    <resource id="Perspective_SmartLog::main" title="SmartLog" sortOrder="300">
+                        <resource id="Perspective_SmartLog::search" title="Log Search"/>
+                        <resource id="Perspective_SmartLog::reindex" title="Reindex Logs"/>
+                    </resource>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Perspective_SmartLog::config" title="SmartLog Configuration"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

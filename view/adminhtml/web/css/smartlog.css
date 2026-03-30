@@ -1,0 +1,207 @@
+/* SmartLog Admin Styles */
+
+.smartlog-container {
+    max-width: 100%;
+    padding: 20px 0;
+}
+
+/* Info bar */
+.smartlog-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 12px 18px;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+.smartlog-provider-badge,
+.smartlog-model-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.smartlog-provider-badge {
+    background: #1979c3;
+    color: #fff;
+}
+
+.smartlog-model-badge {
+    background: #e8e8e8;
+    color: #333;
+    font-family: monospace;
+}
+
+.smartlog-config-link {
+    margin-left: auto;
+    font-size: 12px;
+}
+
+/* Search form */
+.smartlog-search-form {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.smartlog-form-row {
+    margin-bottom: 15px;
+}
+
+.smartlog-form-row-filters {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.smartlog-field {
+    margin-bottom: 10px;
+}
+
+.smartlog-field-query {
+    width: 100%;
+}
+
+.smartlog-field-query textarea {
+    width: 100%;
+    min-height: 70px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 10px;
+}
+
+.smartlog-field-date {
+    flex: 1;
+    min-width: 180px;
+    max-width: 280px;
+}
+
+.smartlog-field-limit {
+    min-width: 100px;
+    max-width: 140px;
+}
+
+.smartlog-field .label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #303030;
+}
+
+/* Actions */
+.smartlog-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding-top: 5px;
+}
+
+/* Status messages */
+#smartlog-status {
+    margin: 15px 0;
+    padding: 12px 18px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+/* Results */
+.smartlog-results {
+    margin-top: 20px;
+}
+
+.smartlog-results h3 {
+    margin: 0 0 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+    font-size: 16px;
+    color: #303030;
+}
+
+.smartlog-result-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.15s ease;
+}
+
+.smartlog-result-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.smartlog-result-header {
+    background: #f5f6f7;
+    padding: 10px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: #555;
+}
+
+.smartlog-result-num {
+    font-weight: 700;
+    color: #1979c3;
+    min-width: 28px;
+}
+
+.smartlog-result-file {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    color: #303030;
+    font-weight: 600;
+    background: #e8f0fe;
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+
+.smartlog-result-lines {
+    color: #777;
+    font-family: monospace;
+    font-size: 11px;
+}
+
+.smartlog-result-date {
+    color: #666;
+    margin-left: auto;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.smartlog-result-content {
+    padding: 15px;
+    margin: 0;
+    overflow-x: auto;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.65;
+    max-height: 400px;
+    overflow-y: auto;
+    background: #fafbfc;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: #24292e;
+    tab-size: 4;
+}
+
+.smartlog-no-results {
+    padding: 30px 20px;
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    background: #fafafa;
+    border-radius: 4px;
+}

@@ -1,0 +1,35 @@
+{
+    "name": "perspectiveteam/module-smartlog",
+    "description": "AI-powered Magento 2 log analysis with semantic & keyword search. Uses LLPhant + OpenSearch for embeddings and vector storage. Supports OpenAI, Google Gemini, and Voyage AI providers.",
+    "type": "magento2-module",
+    "license": "MIT",
+    "version": "1.0.0",
+    "require": {
+        "php": ">=8.1",
+        "magento/framework": "*",
+        "magento/module-backend": "*",
+        "magento/module-config": "*"
+    },
+    "autoload": {
+        "files": ["registration.php"],
+        "psr-4": {
+            "Perspective\\SmartLog\\": ""
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@smartlog:install-worker"
+        ],
+        "post-update-cmd": [
+            "@smartlog:install-worker"
+        ],
+        "smartlog:install-worker": [
+            "Perspective\\SmartLog\\Composer\\WorkerInstaller::install"
+        ]
+    },
+    "extra": {
+        "magento-module": {
+            "sequence": ["Magento_Backend", "Magento_Config"]
+        }
+    }
+}

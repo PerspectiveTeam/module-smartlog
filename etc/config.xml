@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <smartlog>
+            <general>
+                <enabled>0</enabled>
+            </general>
+            <embedding>
+                <provider>openai</provider>
+                <model_openai>text-embedding-3-small</model_openai>
+                <model_gemini>text-embedding-004</model_gemini>
+                <model_anthropic>voyage-3</model_anthropic>
+                <chunk_size>15</chunk_size>
+                <batch_size>20</batch_size>
+            </embedding>
+            <opensearch>
+                <index_name>smartlog_vectors</index_name>
+            </opensearch>
+        </smartlog>
+    </default>
+</config>
