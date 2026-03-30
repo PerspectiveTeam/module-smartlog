@@ -91,4 +91,4 @@ LLPhant requires `psr/log` v3 and `psr/http-message` v2, which conflict with Mag
 1. **Primary** — `bin/magento setup:upgrade` triggers `Setup/Recurring.php` (runs on **every** upgrade) → `WorkerInstaller::install()` copies worker files to `<magento-root>/lib/smartlog/` and runs `composer install`. Works correctly after every pipeline deploy, even if `lib/smartlog/` was wiped.
 2. **Fallback** — if the recurring step fails (e.g. no Composer in path), a warning is logged and you can finish manually: `bin/magento smartlog:install-worker`.
 ## License
-MIT License. See [LICENSE](LICENSE) for details.
+MIT License. See [LICENSE.md](LICENSE.md) for details.
