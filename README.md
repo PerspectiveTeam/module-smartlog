@@ -23,7 +23,7 @@ Semantic & keyword search across `var/log/**` and `var/report/**` using LLPhant 
 ### Via Composer (recommended)
 
 ```bash
-composer require perspective/module-smartlog
+composer require perspectiveteam/module-smartlog
 bin/magento module:enable Perspective_SmartLog
 bin/magento setup:upgrade
 bin/magento setup:di:compile
