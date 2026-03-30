@@ -1,0 +1,9 @@
+# Isolated worker dependencies — installed separately to avoid PSR conflicts with Magento
+Worker/vendor/
+Worker/composer.lock
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*:Zone.Identifier
